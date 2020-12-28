@@ -17,26 +17,26 @@ from django_rest_passwordreset.signals import reset_password_token_created
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
-        if not email:
-            raise TypeError("Please, enter your email.")
+    def create_user(self, username, phone, password=None):
+        if not phone:
+            raise TypeError("Please, enter your phone.")
 
         user = self.model(
             username=username,
-            email=self.normalize_email(email),
+            email=self.normalize_email(phone),
         )
         user.is_active = True
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self, username, phone, password):
         if password is None:
             raise TypeError('Superusers must have a password.')
 
         user = self.create_user(
             username=username,
-            email=email,
+            phone=phone,
             password=password,
         )
         user.is_active = True
@@ -73,8 +73,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', ]
+    USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = ['username', 'password']
 
     objects = MyUserManager()
 
